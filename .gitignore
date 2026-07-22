@@ -1,0 +1,18 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+.venv/
+
+# Local config / runtime files
+app/misc/database_params.json
+
+# Environment variables
+.env
+
+# Editor / OS files
+.vscode/
+.idea/
+.DS_Store

@@ -38,9 +38,10 @@ def parse_to_date_string(value):
     return None
 
 def collect_from_feed(current_latest_article_date_dt_object):
+    print("Collecting articles...")
     for company in companies:
         for feed_source in FEEDS:
-            print(f"Collecting from {feed_source} about {company}...")
+            # print(f"Collecting from {feed_source} about {company}...")
             formatted_url = FEEDS[feed_source]
             formatted_url = formatted_url.format(company = company)
                 
@@ -55,13 +56,16 @@ def collect_from_feed(current_latest_article_date_dt_object):
                     # date check. if article is before date variable that means its outdated and that the DB probably has stuff on it.
                     article_date_for_check = datetime.strptime(fixed_date,"%Y-%m-%d")
                     if(article_date_for_check <= current_latest_article_date_dt_object):
-                        print("Date check failed.")
+                        # print("Date check failed.")
                         continue
 
                     # If its Reddit and the title does not have company name in its title properly, its useless as some articles that come up
                     # are not related to company in the first place. This is a check for that.
                     if(feed_source == "Reddit" and company not in entry.get("title")):
-                        print("Reddit check failed.")
+                        # print("Reddit check failed.")
+                        continue
+
+                    if(feed_source == "Google News" and (entry.get("description") == "" or entry.get("description") == "Check whether you already have access via your university or organisation.")):
                         continue
 
                     url = entry.get("link")
@@ -81,7 +85,7 @@ def collect_from_feed(current_latest_article_date_dt_object):
                         "title": entry.get("title"),
                         "company": company,
                         "link": real_url,
-                        "description": entry.get("title") if feed_source == "Reddit" else article.summary, # For handling the reddit title issue
+                        "description": entry.get("title") if feed_source == "Reddit" else article.summary or entry.get("description"), # For handling the reddit title issue
                         "date": fixed_date,
                         "source": feed_source
                     })
@@ -89,7 +93,7 @@ def collect_from_feed(current_latest_article_date_dt_object):
                 except Exception as e:
                     continue 
 
-if __name__ == "__main__":
+def DataCollectAndUpdate():
     with open("app/misc/database_params.json","r") as file:
         latest_article_date = json.load(file)["latest_article_date"]
 
@@ -106,7 +110,7 @@ if __name__ == "__main__":
 
         insert_article(article)
 
-    print(str(len(articles)) + " articles pushed...")
+    print(str(len(articles)) + " new articles pushed to DB!")
 
     with open("app/misc/database_params.json","w") as file:
         json.dump(

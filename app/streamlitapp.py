@@ -8,8 +8,7 @@ from database import connect_to_db
 from datetime import date, timedelta
 
 companies = (
-    "Wayve", "Revolut", "Deliveroo", "Darktrace", "Monzo",
-    "Octopus+Energy", "Google", "Signal+AI", "H&M", "Meta", "Anthropic"
+    "Revolut","LEGO","Tesla","Deliveroo","Octopus+Energy","Anthropic","Signal+AI"
 )
 
 st.title("RaRIM")

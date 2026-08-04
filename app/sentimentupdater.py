@@ -16,22 +16,55 @@ def update_sentiment():
     rows = cursor.fetchall()
 
     for id, title, sentiment_score in rows:
-        if sentiment_score:
-            continue
+        # if sentiment_score:
+        #     continue
 
-        result = analyser(title,truncation=True,max_length=512)[0]
+        results = analyser(
+            title,
+            truncation=True,
+            max_length=512,
+            top_k=3
+        )
 
-        label = result["label"]
-        confidence = result["score"]
+        positive_score = 0
+        negative_score = 0
+        neutral_score = 0
 
-        if label == "negative":
-            sentiment_score = -confidence
+        for result in results:
 
-        elif label == "positive":
-            sentiment_score = confidence
+            label = result["label"]
+            score = result["score"]
+
+            if label == "positive":
+                positive_score = score
+
+            elif label == "negative":
+                negative_score = score
+
+            elif label == "neutral":
+                neutral_score = score
+
+        highest_label = max(
+            {
+                "positive": positive_score,
+                "negative": negative_score,
+                "neutral": neutral_score
+            },
+            key=lambda x: {
+                "positive": positive_score,
+                "negative": negative_score,
+                "neutral": neutral_score
+            }[x]
+        )
+
+        if highest_label == "positive":
+            sentiment_score = positive_score
+
+        elif highest_label == "negative":
+            sentiment_score = -negative_score
 
         else:
-            sentiment_score = 0
+            sentiment_score = positive_score - negative_score
         
         cursor.execute(
             "UPDATE articles SET sentiment_score = %s where id = %s",
@@ -43,3 +76,5 @@ def update_sentiment():
     conn.close()
 
     print("Updated sentiment for all records.")
+
+# update_sentiment()

@@ -15,14 +15,8 @@ def data_processing():
 def main():
     data_processing_process = Process(target=data_processing)
     data_processing_process.start()
-
-    try:
-        subprocess.run(
-            ["streamlit", "run", "app/streamlitapp.py"],
-            check=True
-        )
-    finally:
-        data_processing_process.join()
+    data_processing_process.join()
+    subprocess.run(["streamlit", "run", "app/streamlitapp.py"],check=True)
 
 
 if __name__ == "__main__":

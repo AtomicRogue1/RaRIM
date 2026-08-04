@@ -6,11 +6,12 @@ from googlenewsdecoder import gnewsdecoder
 from misc.feed_sources import FEEDS
 from database import insert_article
 import json
+import msvcrt
 
 from datetime import datetime
 from email.utils import parsedate_to_datetime
 
-companies = ["Wayve","Revolut","Deliveroo","Darktrace","Monzo","Octopus+Energy","Google","Signal+AI","H&M","Meta"]
+companies = ["Revolut","LEGO","Tesla","Deliveroo","Octopus+Energy","Anthropic","Signal+AI"]
 
 articles = []
 
@@ -89,6 +90,13 @@ def collect_from_feed(current_latest_article_date_dt_object):
                         "date": fixed_date,
                         "source": feed_source
                     })
+                    print(f"Added an article from {feed_source}")
+
+                    if msvcrt.kbhit():
+                        key = msvcrt.getch()
+                        print("Force stopping article collection...")
+                        break
+
 
                 except Exception as e:
                     continue 

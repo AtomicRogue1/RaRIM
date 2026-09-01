@@ -11,7 +11,7 @@ import msvcrt
 from datetime import datetime
 from email.utils import parsedate_to_datetime
 
-companies = ["Revolut","LEGO","Tesla","Deliveroo","Octopus+Energy","Anthropic","Signal+AI"]
+companies = ["Tesla","Infosys","HSBC+UK"]
 
 articles = []
 

@@ -7,6 +7,7 @@ from impactupdater import update_impact
 from riskheatmap import risk_heatmap
 from database import connect_to_db
 from datetime import date, timedelta
+from causaldiscresults import causal_disc_results
 
 st.set_page_config(
     page_title="RaRIM",
@@ -137,4 +138,8 @@ with col4:
     else:
         st.caption("Please choose a date range.")
 
-risk_heatmap()
+risk_heatmap(selected_company)
+
+st.text("With a Human-In-The-Loop, causal candidates and their relationships can be understood to avoid/guide towards possible events in the future.")
+
+causal_disc_results(selected_company)

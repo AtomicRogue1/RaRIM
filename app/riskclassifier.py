@@ -68,7 +68,9 @@ def classify_risk_category(title, risk_categories):
         if any(keyword in title_lower for keyword in keywords):
             return category
 
-    return None
+    # In case, there is null response from LLM and no keyword mapping was possible
+
+    return "Reputational Risks"
 
 def update_risk_category():
     risk_categories = ["Financial Risks","Product Risks","Legal Risks","Reputational Risks","Governance Risks","Political Unrest"]

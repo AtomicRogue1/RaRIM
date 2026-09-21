@@ -4,17 +4,20 @@ from database import connect_to_db
 import plotly.express as px
 from datetime import date, timedelta
 
-def risk_heatmap():
+def risk_heatmap(selected_company):
     st.subheader("Company Risk Heatmap")
 
-    date_range = st.date_input(
-        "Heatmap date range",
-        value=(
-            date.today() - timedelta(days=30),
-            date.today()
-        ),
-        key="heatmap_date_range"
-    )
+    heatmap_date_selector, emptyspace2 = st.columns([2,1])
+    with heatmap_date_selector:
+        date_range = st.date_input(
+            "Heatmap date range",
+            value=(
+                date.today() - timedelta(days=30),
+                date.today()
+            ),
+            key="heatmap_date_range"
+        )
+
 
     if len(date_range) != 2:
         st.caption("Please choose a valid date range.")
@@ -42,8 +45,9 @@ def risk_heatmap():
                   AND impact IS NOT NULL
                   AND collected_at >= %s
                   AND collected_at < %s + INTERVAL '1 day'
+                  AND company = %s
                 """,
-                (start_date, end_date)
+                (start_date, end_date,selected_company)
             )
 
             rows = cursor.fetchall()
